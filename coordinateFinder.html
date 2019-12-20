@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Drawing tools</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #location-display{
+            position: absolute;
+            top: 100px;
+            z-index: 100;
+            background-color: #fff;
+            margin: 3px;
+            padding: 5px;
+        }
+        #locations-list {
+            display: inline-block;
+            vertical-align: top;
+        }
+        .location-item {
+            width: 200px;
+        }
+        #selected-location-item {
+            width: 200px;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="location-display">
+        <div>
+            <textarea id="load-locations-input">
+[
+            { "id": "mainEntrance", "name": "Main Entrance", "joins": ["asbFoyerReception"] },
+            { "id": "asbFoyerReception", "name": "Main Entrance Foyer/Reception", "joins": ["mainEntrance", "theatre", "pacu2", "asbStairsLift","mainCorridor1L1"] },
+            { "id": "theatre", "name": "Theatre", "joins": ["asbFoyerReception"] },
+            { "id": "pacu2", "name": "Pacu 2", "joins": ["asbFoyerReception"] },
+            { "id": "asbStairsLift", "name": "ASB Lifts/Stairs", "joins": ["asbFoyerReception", "asbFoyerL2", "asbFoyerL3", "asbFoyerL4"] },
+            { "id": "asbFoyerL2", "name": "ASB Level 2 foyer", "joins": ["asbStairsLift", "mainCorridor1L2", "w2A", "w2B"] },
+            { "id": "asbFoyerL3", "name": "ASB Level 3 foyer", "joins": ["asbStairsLift", "mainCorridor1L3"] },
+            { "id": "asbFoyerL4", "name": "ASB Level 4 foyer", "joins": ["asbStairsLift"] },
+            { "id": "w2A", "name": "Ward 2A", "joins": ["asbFoyerL2"] },
+            { "id": "w2B", "name": "Ward 2B", "joins": ["asbFoyerL2"] },
+            { "id": "mainCorridor1L2", "name": "L2 corridor between ASB and Specialist Services", "joins": ["asbFoyerL2", "specialServicesMainCorridorIntersection"] },
+            { "id": "specialServicesMainCorridorIntersection", "name": "Intersection of Specialist Services and main corridor", "joins": ["mainCorridor1L2", "mainCorridor2L2", "specialServicesLiftsStairs", "occupationalTherapy"] },
+            { "id": "specialServicesLiftsStairs", "name": "Specialist Services Lifts/Stairs", "joins": ["specialServicesMainCorridorIntersection"] },
+            { "id": "occupationalTherapy", "name": "Occupational Therapy", "joins": ["specialServicesMainCorridorIntersection"] },
+            { "id": "mainCorridor2L2", "name": "L2 corridor between Specialist Services and Outpatients", "joins": ["specialServicesMainCorridorIntersection", "orthotics", "chapel"] },
+            { "id": "orthotics", "name": "Orthotics", "joins": ["mainCorridor2L2"] },
+            { "id": "chapel", "name": "Chapel", "joins": ["mainCorridor2L2"] },
+            
+            { "id": "mainCorridor1L3", "name": "L3 corridor between ASB and HR/Education Center", "joins": ["asbFoyerL3", "hrMainCorridorIntersection", "labCare"] },
+            { "id": "hrMainCorridorIntersection", "name": "Intersection of HR and main corridor", "joins": ["mainCorridor1L3", "hrLiftsStairs", "humanResources", "educationCenter", "library"] },
+
+            { "id": "labCare", "name": "LabCare", "joins": ["mainCorridor1L3"] },
+            { "id": "hrLiftsStairs", "name": "HR Lifts/Stairs", "joins": ["hrMainCorridorIntersection","kitchenMainCorridorIntersection"] },
+
+            { "id": "humanResources", "name": "Human Resources", "joins": ["hrMainCorridorIntersection"] },
+            { "id": "library", "name": "Library", "joins": ["hrMainCorridorIntersection"] },
+            { "id": "educationCenter", "name": "Education Center", "joins": ["hrMainCorridorIntersection"] },
+
+
+            
+            { "id": "mainCorridor1L1", "name": "L1 corridor between ASB and Kitchen", "joins": ["asbFoyerReception","kitchenMainCorridorIntersection","cafe", "emergencyDepartment"] },
+            { "id": "cafe", "name": "Cafe", "joins": ["mainCorridor1L1"] },
+            { "id": "emergencyDepartment", "name": "EmergencyDepartment", "joins": ["mainCorridor1L1"] },
+            { "id": "kitchenMainCorridorIntersection", "name": "Intersection between Kitchen and main corridor", "joins": ["hrLiftsStairs","mainCorridor1L1","mainCorridor2L1","kitchen"] },
+            { "id": "kitchen", "name": "Kitchen", "joins": ["kitchenMainCorridorIntersection"] },
+            { "id": "mainCorridor2L1", "name": "L1 corridor between Kitchen and Mortuary", "joins": ["kitchenMainCorridorIntersection","dieticians","stores","mortuary"] },
+            { "id": "dieticians", "name": "Dieticians", "joins": ["mainCorridor2L1"] },
+            { "id": "stores", "name": "Stores", "joins": ["mainCorridor2L1"] },
+            { "id": "mortuary", "name": "Mortuary", "joins": ["mainCorridor2L1"] }
+
+
+        ]
+</textarea>
+            <input type="button" value="load" id="load-locations" />
+        </div>
+        <div>
+            <div id="locations-list">
+
+            </div>
+            <div id="selected-location-item">
+                <input type="button" id="new-location" value="make a new one" /><br/>
+                id: <input id="item-id" value="" /><br />
+                name: <input id="item-name" value="" /><br />
+                joins:<br />
+                <div id="join-container">
+
+                </div>
+                <input type="button" id="new-join" value="new join" />
+                <div id="new-join-instructions">click item on the menu</div>
+                <div id="item-coordinates">
+                    coordinates:<br />
+                    <textarea id="item-coordinates-input"></textarea>
+                </div>
+
+                <input type="button" id="save-selected-item" value="save this guy" />
+            </div>
+        </div>
+    </div>
+    <script src="jquery-3.4.1.min.js"></script>
+    <script>
+
+        var locations = [];
+        var newJoinWanted = false;
+        
+        $("#load-locations").on("click", function () {
+            LoadLocationsFromInput();
+        });
+        $("#new-join").on("click", function () {
+            NewJoinClicked();
+        });
+        $("#new-join-instructions").hide();
+        $("#save-selected-item").on("click", function () {
+            SaveSelectedItem();
+        });
+        $("#new-location").on("click", function () {
+            MakeNewLocation();
+        });
+
+        function LoadLocationsFromInput() {
+            var locationText = $("#load-locations-input").val();
+            locations = JSON.parse(locationText);
+            console.log(locations);
+            DisplayAllLocations();
+        }
+        LoadLocationsFromInput();
+
+        function DisplayAllLocations() {
+            ClearLocationsList();
+            for (var i = 0; i < locations.length; i++) {
+                $("#locations-list").append($('<div>'+ locations[i].id + ' - ' + locations[i].name +'</div>')
+                    .attr({ "data-locationid": locations[i].id })
+                    //.data("locationid",locations[i].id)
+                    .addClass("location-item")
+                )
+            }
+            $(".location-item").on("click", function () {
+                LocationItemClicked($(this))
+            });
+        }
+
+        function SaveSelectedItem() {
+            // save the values back into the locations[] list
+            var existingIndex = GetIndexForId($("#item-id").val())
+            var links = [];
+            $("#join-container").find("input").each(function () {
+                links.push($(this).val());
+            });
+            if (existingIndex < 0) {
+                // this must be a new one
+
+                var newLocation = {
+                    id: $("#item-id").val(),
+                    name: $("#item-name").val(),
+                    joins: links,
+                    coordinates: $("#item-coordinates-input").val()
+                };
+                console.log("adding new location:");
+                console.log(newLocation);
+                locations.push(newLocation);
+            } else {
+                locations[existingIndex].id = $("#item-id").val();
+                locations[existingIndex].name = $("#item-name").val();
+                locations[existingIndex].links = links;
+                locations[existingIndex].coordinates = $("#item-coordinates-input").val();
+            }
+            // then update the text area based on the locations list?
+
+
+            ClearSelectedLocationValues();
+            DisplayAllLocations();
+        }
+
+        function MakeNewLocation() {
+            ClearSelectedLocationValues();
+        }
+
+        function ClearSelectedLocationValues() {
+            $("#item-id").val("");
+            $("#item-name").val("");
+            $("#join-container").html("");
+            $("#item-coordinates-input").val("");
+        }
+
+        function LocationItemClicked(item) {
+            console.log(item);
+            var clickedLocationId = item.data("locationid");
+            console.log(clickedLocationId);
+            if (newJoinWanted) {
+                AddNewJoinFromId(clickedLocationId);
+            } else {
+                LoadLocationItemAsSelected(clickedLocationId);
+            }
+        }
+
+        function AddNewJoinFromId(locationId) {
+            newJoinWanted = false;
+            $("#new-join-instructions").hide();
+            $("#join-container").append($('<div></div>')).append($("<input type='text' value='"+ locationId +"' />"));
+        }
+
+        function NewJoinClicked() {
+            newJoinWanted = true;
+            $("#new-join-instructions").show();
+
+        }
+
+        function LoadLocationItemAsSelected(locationId) {
+            var index = GetIndexForId(locationId);
+            if (index > 0) {
+                var location = locations[index];
+                $("#item-id").val(location.id);
+                $("#item-name").val(location.name);
+                $("#join-container").html("");
+                for (var i = 0; i < location.joins.length; i++) {
+                    // join-container
+                    $("#join-container").append($('<div></div>').append($("<input type='text' value='"+ location.joins[i] +"' />")).append($("<span class='delete-join'>X</span>")));
+                }
+                $("#item-coordinates-input").val(location.coordinates);
+
+                $(".delete-join").on("click", function () {
+                    $(this).parent().remove();
+                });
+            }
+        }
+
+        function GetIndexForId(locationId) {
+            for (var i = 0; i < locations.length; i++) {
+                if (locations[i].id === locationId) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        function ClearLocationsList() {
+            $("#locations-list").html("");
+        }
+
+        // This example requires the Drawing library. Include the libraries=drawing
+        // parameter when you first load the API. For example:
+        // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=drawing">
+
+        function initMap() {
+            var uluru = {
+                lat: -39.072474,
+                lng: 174.055992
+            };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: uluru,
+                zoom: 17,
+                mapTypeId: 'satellite'
+            });
+
+
+
+            // this creates the base options for the drawings (polygons/buildings)
+            var drawingManager = new google.maps.drawing.DrawingManager({
+                drawingMode: google.maps.drawing.OverlayType.MARKER,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: ['marker', 'circle', 'polygon', 'polyline', 'rectangle']
+                },
+                markerOptions: {
+                    icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
+                },
+                rectangleOptions: {
+                    fillOpacity: 0
+                },
+                circleOptions: {
+                    //fillColor: '#ffff00',
+                    fillOpacity: 1,
+                    strokeWeight: 5,
+                    clickable: false,
+                    editable: true,
+                    zIndex: 1
+                }
+            });
+            drawingManager.setMap(map);
+
+            // this just outputs the coordinates once a polygon is drawn on the screen
+            google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event) {
+                console.log(event.type);
+                if (event.type == 'rectangle') {
+                    var ne = event.overlay.getBounds().getNorthEast();
+                    var sw = event.overlay.getBounds().getSouthWest();
+
+                    var bounds = "ne: " + ne.lat() + ", sw: " + sw.lat() + ", ne: " + ne.lng() + ", sw: " + sw.lng();
+                    console.log(bounds);
+                }
+                if (event.type == 'polygon') {
+                    //var radius = event.overlay.getRadius();
+                    var coordinatesArray = event.overlay.getPath().getArray();
+                    var allCoordinates = "";
+                    for (var i = 0; i < coordinatesArray.length; i++) {
+                        //console.log("new google.maps.LatLng(" + coordinatesArray[i].lat() + ", " + coordinatesArray[i].lng() + "),");
+                        var coord = "{lat: " + coordinatesArray[i].lat() + ", lng: " + coordinatesArray[i].lng() + "},";
+                        allCoordinates = allCoordinates + coord;
+                    }
+                    allCoordinates = allCoordinates.slice(0, -1);
+                    $("#item-coordinates-input").val(allCoordinates);
+                    console.log(allCoordinates);
+                }
+                if (event.type == 'marker') {
+                    var lat = event.overlay.getPosition().lat();
+                    var lng = event.overlay.getPosition().lng();
+                    var coord = "{lat: " + lat + ", lng: " + lng + "},";
+                    console.log(coord);
+                }
+                //var buildingCoords = [
+                //new google.maps.LatLng(-39.07470621091739, 174.05701607465744),
+                //new google.maps.LatLng(-39.07475202073784, 174.0570965409279),
+                //new google.maps.LatLng(-39.074962329077316, 174.05688732862473),
+                //new google.maps.LatLng(-39.07491027261602, 174.0568122267723)
+                //];
+
+
+
+
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzfpFt6f4Tz9MUjQed0SoIVfbDaUHfavE&libraries=drawing&callback=initMap" async defer></script>
+</body>
+
+</html>

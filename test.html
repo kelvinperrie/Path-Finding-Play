@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-nz">
+<head>
+    <title>path finding</title>
+</head>
+<body>
+    <div>
+        from:
+        <select id="location-start">
+        </select>
+    </div>
+    <div>
+        to:
+        <select id="location-target">
+        </select>
+    </div>
+    <div>
+        <input type="button" id="calculate" value="work it out" />
+    </div>
+    <div id="display-path">
+
+    </div>
+
+    <script src="jquery-3.4.1.min.js" type="text/javascript" ></script>
+    <script>
+
+        var nodes = [
+            { "id": "mainEntrance", "name": "Main Entrance", "joins": ["asbFoyerReception"] },
+            { "id": "asbFoyerReception", "name": "Main Entrance Foyer/Reception", "joins": ["mainEntrance", "theatre", "pacu2", "asbStairsLift","mainCorridor1L1"] },
+            { "id": "theatre", "name": "Theatre", "joins": ["asbFoyerReception"] },
+            { "id": "pacu2", "name": "Pacu 2", "joins": ["asbFoyerReception"] },
+            { "id": "asbStairsLift", "name": "ASB Lifts/Stairs", "joins": ["asbFoyerReception", "asbFoyerL2", "asbFoyerL3", "asbFoyerL4"] },
+            { "id": "asbFoyerL2", "name": "ASB Level 2 foyer", "joins": ["asbStairsLift", "mainCorridor1L2", "w2A", "w2B"] },
+            { "id": "asbFoyerL3", "name": "ASB Level 3 foyer", "joins": ["asbStairsLift", "mainCorridor1L3"] },
+            { "id": "asbFoyerL4", "name": "ASB Level 4 foyer", "joins": ["asbStairsLift"] },
+            { "id": "w2A", "name": "Ward 2A", "joins": ["asbFoyerL2"] },
+            { "id": "w2B", "name": "Ward 2B", "joins": ["asbFoyerL2"] },
+            { "id": "mainCorridor1L2", "name": "L2 corridor between ASB and Specialist Services", "joins": ["asbFoyerL2", "specialServicesMainCorridorIntersection"] },
+            { "id": "specialServicesMainCorridorIntersection", "name": "Intersection of Specialist Services and main corridor", "joins": ["mainCorridor1L2", "mainCorridor2L2", "specialServicesLiftsStairs", "occupationalTherapy"] },
+            { "id": "specialServicesLiftsStairs", "name": "Specialist Services Lifts/Stairs", "joins": ["specialServicesMainCorridorIntersection"] },
+            { "id": "occupationalTherapy", "name": "Occupational Therapy", "joins": ["specialServicesMainCorridorIntersection"] },
+            { "id": "mainCorridor2L2", "name": "L2 corridor between Specialist Services and Outpatients", "joins": ["specialServicesMainCorridorIntersection", "orthotics", "chapel"] },
+            { "id": "orthotics", "name": "Orthotics", "joins": ["mainCorridor2L2"] },
+            { "id": "chapel", "name": "Chapel", "joins": ["mainCorridor2L2"] },
+            
+            { "id": "mainCorridor1L3", "name": "L3 corridor between ASB and HR/Education Center", "joins": ["asbFoyerL3", "hrMainCorridorIntersection", "labCare"] },
+            { "id": "hrMainCorridorIntersection", "name": "Intersection of HR and main corridor", "joins": ["mainCorridor1L3", "hrLiftsStairs", "humanResources", "educationCenter", "library"] },
+
+            { "id": "labCare", "name": "LabCare", "joins": ["mainCorridor1L3"] },
+            { "id": "hrLiftsStairs", "name": "HR Lifts/Stairs", "joins": ["hrMainCorridorIntersection","kitchenMainCorridorIntersection"] },
+
+            { "id": "humanResources", "name": "Human Resources", "joins": ["hrMainCorridorIntersection"] },
+            { "id": "library", "name": "Library", "joins": ["hrMainCorridorIntersection"] },
+            { "id": "educationCenter", "name": "Education Center", "joins": ["hrMainCorridorIntersection"] },
+
+
+            
+            { "id": "mainCorridor1L1", "name": "L1 corridor between ASB and Kitchen", "joins": ["asbFoyerReception","kitchenMainCorridorIntersection","cafe", "emergencyDepartment"] },
+            { "id": "cafe", "name": "Cafe", "joins": ["mainCorridor1L1"] },
+            { "id": "emergencyDepartment", "name": "EmergencyDepartment", "joins": ["mainCorridor1L1"] },
+            { "id": "kitchenMainCorridorIntersection", "name": "Intersection between Kitchen and main corridor", "joins": ["hrLiftsStairs","mainCorridor1L1","mainCorridor2L1","kitchen"] },
+            { "id": "kitchen", "name": "Kitchen", "joins": ["kitchenMainCorridorIntersection"] },
+            { "id": "mainCorridor2L1", "name": "L1 corridor between Kitchen and Mortuary", "joins": ["kitchenMainCorridorIntersection","dieticians","stores","mortuary"] },
+            { "id": "dieticians", "name": "Dieticians", "joins": ["mainCorridor2L1"] },
+            { "id": "stores", "name": "Stores", "joins": ["mainCorridor2L1"] },
+            { "id": "mortuary", "name": "Mortuary", "joins": ["mainCorridor2L1"] },
+
+
+        ];
+
+
+        function CalculatePath() {
+            var startId = $("#location-start").val();
+            var targetId = $("#location-target").val();
+
+            //var startId = "mainEntrance";
+            //var targetId = "library";
+
+            var nodeSet = [];
+            var completedNotes = [];
+
+            for (var i = 0; i < nodes.length; i++) {
+                nodes[i].distance = 100000;
+                if (nodes[i].id === startId) {
+                    nodes[i].distance = 0;
+                }
+                nodes[i].previous = null;
+                nodeSet.push(nodes[i]);
+            }
+            console.log(nodeSet);
+            console.log(nodeSet[0]);
+            console.log(nodeSet[1]);
+
+            console.log("==========================================")
+            var iterationCounter = 0;
+            while (nodeSet.length > 0) {
+
+                var currentIndex = GetIndexWithMinDistance(nodeSet);
+                var currentItem = nodeSet[currentIndex];
+                console.log("current item is");
+                console.log(currentItem);
+
+                nodeSet.splice(currentIndex, 1);
+                completedNotes.push(currentItem);
+
+                if (currentItem.id === targetId) {
+                    console.log("I think we can end here?");
+                    console.log("==========================================")
+
+                    var thePath = ConstructOurPath(completedNotes, currentItem);
+
+                    return thePath;
+                }
+
+                for (var v = 0; v < currentItem.joins.length; v++) {
+                    var vIndex = GetIndexFromCollection(nodeSet, currentItem.joins[v]);
+                    //console.log("index returns as " + vIndex);
+                    if (vIndex >= 0) {
+                        console.log("checking alt distance for " + currentItem.joins[v]);
+                        var altDistance = currentItem.distance + 1;
+                        if (altDistance < nodeSet[vIndex].distance) {
+                            nodeSet[vIndex].distance = altDistance;
+                            nodeSet[vIndex].previous = currentItem.id;
+                        }
+                    }
+                }
+
+                iterationCounter += 1;
+            }
+
+            console.log(completedNotes);
+
+        }
+
+        function GetIndexWithMinDistance(collection) {
+            //console.log(collection);
+            var smallestIndex = null;
+            var smallestValue = 999999999;
+            for (var i = 0; i < collection.length; i++) {
+                if (collection[i].distance < smallestValue) {
+                    smallestIndex = i;
+                    smallestValue = collection[i].distance;
+                }
+            }
+            //console.log("about to return " + smallestIndex);
+            return smallestIndex;
+        }
+        function GetIndexFromCollection(collection, id) {
+            //console.log("looking for id " + id + " in the collection");
+            for (var i = 0; i < collection.length; i++) {
+                if (collection[i].id === id) {
+                    //console.log("returning an index of " + i);
+                    return i;
+                }
+            }
+            return -1;
+        }
+        function ConstructOurPath(processedNodes, targetItem) {
+            var path = "";
+            var currentItem = targetItem;
+            while (currentItem) {
+                path = " -> " + currentItem.name + path;
+                if (currentItem.previous) {
+                    var previousIndex = GetIndexFromCollection(processedNodes, currentItem.previous);
+                    var previousItem = processedNodes[previousIndex];
+                    currentItem = previousItem;
+                } else {
+                    break;
+                }
+            }
+            return path;
+        }
+
+        function InitalizeHtml() {
+
+            for (var i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
+                var o = new Option(node.name, node.id);
+                $(o).html(node.name);
+                $("#location-start").append(o);
+                o = new Option(node.name, node.id);
+                $(o).html(node.name);
+                $("#location-target").append(o);
+            }
+        }
+        InitalizeHtml();
+
+        function DisplayPath(thePath) {
+            $("#display-path").text(thePath);
+        }
+
+        $("#calculate").on("click", function () {
+            var thePath = CalculatePath();
+            DisplayPath(thePath);
+        });
+
+
+    </script>
+</body>
+</html>
