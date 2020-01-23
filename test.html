@@ -2,72 +2,78 @@
 <html lang="en-nz">
 <head>
     <title>path finding</title>
+    <style>
+        .lead-text {
+            font-size: 1.5em;
+            margin-bottom: .5em;
+        }
+        #path-output {
+            display: none;
+            margin-top: 1em;
+        }
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        #display-path li {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        from:
-        <select id="location-start">
-        </select>
-    </div>
-    <div>
-        to:
-        <select id="location-target">
-        </select>
-    </div>
-    <div>
-        <input type="button" id="calculate" value="work it out" />
-    </div>
-    <div id="display-path">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-4">
+                <div class="lead-text">Where are you trying to go?</div>
+                <div class="form-group">
+                    from:
+                    <select id="location-start">
+                    </select>
+                </div>
+                <div class="form-group">
+                    to:
+                    <select id="location-target">
+                    </select>
+                </div>
+                <div>
+                    <input type="button" id="calculate" value="find my path" />
+                </div>
+                <div id="path-output">
+                    The path you need to follow is:
+                    <ul id="display-path">
+                    </ul>
 
+                </div>
+            </div>
+            <div class="col-8">
+                <div id="map"></div>
+            </div>
+        </div>
     </div>
 
-    <script src="jquery-3.4.1.min.js" type="text/javascript" ></script>
+
+
+
+    <!--<script src="jquery-3.4.1.min.js" type="text/javascript"></script>-->
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzfpFt6f4Tz9MUjQed0SoIVfbDaUHfavE"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script src="pageinfo.js"></script>
     <script>
 
-        var nodes = [
-            { "id": "mainEntrance", "name": "Main Entrance", "joins": ["asbFoyerReception"] },
-            { "id": "asbFoyerReception", "name": "Main Entrance Foyer/Reception", "joins": ["mainEntrance", "theatre", "pacu2", "asbStairsLift","mainCorridor1L1"] },
-            { "id": "theatre", "name": "Theatre", "joins": ["asbFoyerReception"] },
-            { "id": "pacu2", "name": "Pacu 2", "joins": ["asbFoyerReception"] },
-            { "id": "asbStairsLift", "name": "ASB Lifts/Stairs", "joins": ["asbFoyerReception", "asbFoyerL2", "asbFoyerL3", "asbFoyerL4"] },
-            { "id": "asbFoyerL2", "name": "ASB Level 2 foyer", "joins": ["asbStairsLift", "mainCorridor1L2", "w2A", "w2B"] },
-            { "id": "asbFoyerL3", "name": "ASB Level 3 foyer", "joins": ["asbStairsLift", "mainCorridor1L3"] },
-            { "id": "asbFoyerL4", "name": "ASB Level 4 foyer", "joins": ["asbStairsLift"] },
-            { "id": "w2A", "name": "Ward 2A", "joins": ["asbFoyerL2"] },
-            { "id": "w2B", "name": "Ward 2B", "joins": ["asbFoyerL2"] },
-            { "id": "mainCorridor1L2", "name": "L2 corridor between ASB and Specialist Services", "joins": ["asbFoyerL2", "specialServicesMainCorridorIntersection"] },
-            { "id": "specialServicesMainCorridorIntersection", "name": "Intersection of Specialist Services and main corridor", "joins": ["mainCorridor1L2", "mainCorridor2L2", "specialServicesLiftsStairs", "occupationalTherapy"] },
-            { "id": "specialServicesLiftsStairs", "name": "Specialist Services Lifts/Stairs", "joins": ["specialServicesMainCorridorIntersection"] },
-            { "id": "occupationalTherapy", "name": "Occupational Therapy", "joins": ["specialServicesMainCorridorIntersection"] },
-            { "id": "mainCorridor2L2", "name": "L2 corridor between Specialist Services and Outpatients", "joins": ["specialServicesMainCorridorIntersection", "orthotics", "chapel"] },
-            { "id": "orthotics", "name": "Orthotics", "joins": ["mainCorridor2L2"] },
-            { "id": "chapel", "name": "Chapel", "joins": ["mainCorridor2L2"] },
-            
-            { "id": "mainCorridor1L3", "name": "L3 corridor between ASB and HR/Education Center", "joins": ["asbFoyerL3", "hrMainCorridorIntersection", "labCare"] },
-            { "id": "hrMainCorridorIntersection", "name": "Intersection of HR and main corridor", "joins": ["mainCorridor1L3", "hrLiftsStairs", "humanResources", "educationCenter", "library"] },
+        var nodes = pageinfo;
+        var establishedPath = [];
+        var map;
 
-            { "id": "labCare", "name": "LabCare", "joins": ["mainCorridor1L3"] },
-            { "id": "hrLiftsStairs", "name": "HR Lifts/Stairs", "joins": ["hrMainCorridorIntersection","kitchenMainCorridorIntersection"] },
-
-            { "id": "humanResources", "name": "Human Resources", "joins": ["hrMainCorridorIntersection"] },
-            { "id": "library", "name": "Library", "joins": ["hrMainCorridorIntersection"] },
-            { "id": "educationCenter", "name": "Education Center", "joins": ["hrMainCorridorIntersection"] },
-
-
-            
-            { "id": "mainCorridor1L1", "name": "L1 corridor between ASB and Kitchen", "joins": ["asbFoyerReception","kitchenMainCorridorIntersection","cafe", "emergencyDepartment"] },
-            { "id": "cafe", "name": "Cafe", "joins": ["mainCorridor1L1"] },
-            { "id": "emergencyDepartment", "name": "EmergencyDepartment", "joins": ["mainCorridor1L1"] },
-            { "id": "kitchenMainCorridorIntersection", "name": "Intersection between Kitchen and main corridor", "joins": ["hrLiftsStairs","mainCorridor1L1","mainCorridor2L1","kitchen"] },
-            { "id": "kitchen", "name": "Kitchen", "joins": ["kitchenMainCorridorIntersection"] },
-            { "id": "mainCorridor2L1", "name": "L1 corridor between Kitchen and Mortuary", "joins": ["kitchenMainCorridorIntersection","dieticians","stores","mortuary"] },
-            { "id": "dieticians", "name": "Dieticians", "joins": ["mainCorridor2L1"] },
-            { "id": "stores", "name": "Stores", "joins": ["mainCorridor2L1"] },
-            { "id": "mortuary", "name": "Mortuary", "joins": ["mainCorridor2L1"] },
-
-
-        ];
-
+        var highlightStrokeColor = 'red';
+        var highlightFillColor = 'red';
+        var strokeColor = '#000';
+        var fillColor = '#000';
+        
 
         function CalculatePath() {
             var startId = $("#location-start").val();
@@ -107,16 +113,16 @@
                     console.log("I think we can end here?");
                     console.log("==========================================")
 
-                    var thePath = ConstructOurPath(completedNotes, currentItem);
+                    var thePath = ConstructNodePath(completedNotes, currentItem);
 
                     return thePath;
                 }
 
                 for (var v = 0; v < currentItem.joins.length; v++) {
-                    var vIndex = GetIndexFromCollection(nodeSet, currentItem.joins[v]);
+                    var vIndex = GetIndexFromCollection(nodeSet, currentItem.joins[v].linkToId);
                     //console.log("index returns as " + vIndex);
                     if (vIndex >= 0) {
-                        console.log("checking alt distance for " + currentItem.joins[v]);
+                        console.log("checking alt distance for " + currentItem.joins[v].linkToId);
                         var altDistance = currentItem.distance + 1;
                         if (altDistance < nodeSet[vIndex].distance) {
                             nodeSet[vIndex].distance = altDistance;
@@ -155,11 +161,13 @@
             }
             return -1;
         }
-        function ConstructOurPath(processedNodes, targetItem) {
-            var path = "";
+
+        function ConstructNodePath(processedNodes, targetItem) {
+            // return an array of the names that we need to visit
+            var path = [];
             var currentItem = targetItem;
             while (currentItem) {
-                path = " -> " + currentItem.name + path;
+                path.push(currentItem);
                 if (currentItem.previous) {
                     var previousIndex = GetIndexFromCollection(processedNodes, currentItem.previous);
                     var previousItem = processedNodes[previousIndex];
@@ -168,9 +176,28 @@
                     break;
                 }
             }
+            // get our array in the right order
+            path = path.reverse();
             return path;
         }
 
+        //function ConstructOurPath(processedNodes, targetItem) {
+        //    var path = "";
+        //    var currentItem = targetItem;
+        //    while (currentItem) {
+        //        path = " -> " + currentItem.name + path;
+        //        if (currentItem.previous) {
+        //            var previousIndex = GetIndexFromCollection(processedNodes, currentItem.previous);
+        //            var previousItem = processedNodes[previousIndex];
+        //            currentItem = previousItem;
+        //        } else {
+        //            break;
+        //        }
+        //    }
+        //    return path;
+        //}
+
+        // setup the dropdowns etc
         function InitalizeHtml() {
 
             for (var i = 0; i < nodes.length; i++) {
@@ -186,14 +213,157 @@
         InitalizeHtml();
 
         function DisplayPath(thePath) {
-            $("#display-path").text(thePath);
+            establishedPath = thePath;
+            // display the path as text
+            $("#path-output").show();
+            $("#display-path").html("");
+            for (var i = 0; i < establishedPath.length; i++) {
+                $("#display-path").append("<li data-index='"+i+"'>" + establishedPath[i].name + "</li>")
+            }
+            $("#display-path li").on("click", function () {
+                PathClickHandler(this);
+            });
+            // display the path on the map
+            var joins = [];
+            for (var i = 0; i < establishedPath.length; i++) {
+                // draw this building/area on the map
+                establishedPath[i].buildingDefinition = DrawBuilding(establishedPath[i]);
+                if (i+1 < establishedPath.length) {
+                    var thisItem = establishedPath[i];
+                    var nextItem = establishedPath[i + 1];
+                    for (var x = 0; x < thisItem.joins.length; x++) {
+                        if (thisItem.joins[x].linkToId == nextItem.id) {
+                            // this is the join we want
+                            joins.push(thisItem.joins[x]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for (var i = 0; i < joins.length-1; i++) {
+                var nextJoin = joins[i + 1];
+
+                var line = DrawLine(joins[i].coordinates, nextJoin.coordinates);
+                establishedPath[i].lineDefinition = line;
+            }
         }
 
+        function DrawLine(startCoordinate, endCoordinate) {
+            var startCo = new google.maps.LatLng(startCoordinate.lat, startCoordinate.lng);
+            var endCo = new google.maps.LatLng(endCoordinate.lat, endCoordinate.lng);
+            var coords = [ startCo, endCo ]
+            var path = new google.maps.Polyline({
+                path: coords,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+            path.setMap(map);
+            return path;
+        }
+
+        function DrawBuilding(building) {
+            var buildingCoords = [];
+            for (var c = 0; c < building.coordinates.length; c++) {
+                var coordinate = building.coordinates[c];
+                buildingCoords.push(new google.maps.LatLng(coordinate.lat, coordinate.lng));
+            }
+            var strokeColor = strokeColor;
+            var fillColor = fillColor;
+            var buildingDefinition = new google.maps.Polygon({
+                paths: buildingCoords,
+                draggable: false,
+                editable: false,
+                strokeColor: strokeColor,
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: fillColor,
+                fillOpacity: 0.35,
+                originalStrokeColor: strokeColor,
+                originalFillColor: fillColor,
+                key: building.key,
+                description: building.description,
+                title: building.title
+            });
+            buildingDefinition.setMap(map);
+            return buildingDefinition;
+        }
+
+        function RemoveAllBuildingHighlight() {
+            for (var i = 0; i < establishedPath.length; i++) {
+                establishedPath[i].buildingDefinition.setOptions({
+                    strokeColor: strokeColor,
+                    fillColor: fillColor
+                });
+            }
+        }
+
+        function HighlightBuilding(building) {
+            building.setOptions({
+                strokeColor: highlightStrokeColor,
+                fillColor: highlightFillColor
+            });
+        }
+
+        function ClearExistingData() {
+            for (var i = 0; i < establishedPath.length; i++) {
+                establishedPath[i].buildingDefinition.setMap(null);
+                if (establishedPath[i].lineDefinition) {
+                    establishedPath[i].lineDefinition.setMap(null);
+                }
+            }
+            establishedPath = [];
+        }
+
+        function PathClickHandler(item) {
+            RemoveAllBuildingHighlight();
+            var clickedItem = establishedPath[$(item).data("index")];
+            HighlightBuilding(clickedItem.buildingDefinition);
+        }
+        $(document).ready(function () {
+
+        });
+
         $("#calculate").on("click", function () {
+            ClearExistingData();
             var thePath = CalculatePath();
             DisplayPath(thePath);
         });
 
+
+
+
+
+
+        // sets up everything
+        function initMap() {
+            var uluru = {
+                lat: -39.07131309060466,
+                lng: 174.05516006729744
+            };
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: uluru,
+                mapTypeId: 'satellite',
+                zoom: 18,
+                styles: [{
+                    featureType: 'poi',
+                    stylers: [{
+                        visibility: 'off'
+                    }]
+                }, {
+                    featureType: 'transit',
+                    elementType: 'labels.icon',
+                    stylers: [{
+                        visibility: 'off'
+                    }]
+                }]
+            });
+
+            //loadLookUpList();
+        }
+        google.maps.event.addDomListener(window, 'load', initMap);
 
     </script>
 </body>

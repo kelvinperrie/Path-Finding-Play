@@ -51,51 +51,7 @@
     <div id="map"></div>
     <div id="location-display">
         <div>
-            <textarea id="load-locations-input">
-[
-            { "id": "mainEntrance", "name": "Main Entrance", "joins": [{"linkToId":"asbFoyerReception"}] },
-            { "id": "asbFoyerReception", "name": "Main Entrance Foyer/Reception", "joins": [{"linkToId":"mainEntrance"}, {"linkToId":"theatre"}, {"linkToId":"pacu2"}, {"linkToId":"asbStairsLift"},{"linkToId":"mainCorridor1L1"}] },
-            { "id": "theatre", "name": "Theatre", "joins": [{"linkToId":"asbFoyerReception"}] },
-            { "id": "pacu2", "name": "Pacu 2", "joins": [{"linkToId":"asbFoyerReception"}] },
-            { "id": "asbStairsLift", "name": "ASB Lifts/Stairs", "joins": [{"linkToId":"asbFoyerReception"}, {"linkToId":"asbFoyerL2"}, {"linkToId":"asbFoyerL3"}, {"linkToId":"asbFoyerL4"}] },
-            { "id": "asbFoyerL2", "name": "ASB Level 2 foyer", "joins": [{"linkToId":"asbStairsLift"}, {"linkToId":"mainCorridor1L2"}, {"linkToId":"w2A"}, {"linkToId":"w2B"}] },
-            { "id": "asbFoyerL3", "name": "ASB Level 3 foyer", "joins": [{"linkToId":"asbStairsLift"}, {"linkToId":"mainCorridor1L3"}] },
-            { "id": "asbFoyerL4", "name": "ASB Level 4 foyer", "joins": [{"linkToId":"asbStairsLift"}] },
-            { "id": "w2A", "name": "Ward 2A", "joins": [{"linkToId":"asbFoyerL2"}] },
-            { "id": "w2B", "name": "Ward 2B", "joins": [{"linkToId":"asbFoyerL2"}] },
-            { "id": "mainCorridor1L2", "name": "L2 corridor between ASB and Specialist Services", "joins": [{"linkToId":"asbFoyerL2"}, {"linkToId":"specialServicesMainCorridorIntersection"}] },
-            { "id": "specialServicesMainCorridorIntersection", "name": "Intersection of Specialist Services and main corridor", "joins": [{"linkToId":"mainCorridor1L2"}, {"linkToId":"mainCorridor2L2"}, {"linkToId":"specialServicesLiftsStairs"}, {"linkToId":"occupationalTherapy"}] },
-            { "id": "specialServicesLiftsStairs", "name": "Specialist Services Lifts/Stairs", "joins": [{"linkToId":"specialServicesMainCorridorIntersection"}] },
-            { "id": "occupationalTherapy", "name": "Occupational Therapy", "joins": [{"linkToId":"specialServicesMainCorridorIntersection"}] },
-            { "id": "mainCorridor2L2", "name": "L2 corridor between Specialist Services and Outpatients", "joins": [{"linkToId":"specialServicesMainCorridorIntersection"}, {"linkToId":"orthotics"}, {"linkToId":"chapel"}] },
-            { "id": "orthotics", "name": "Orthotics", "joins": [{"linkToId":"mainCorridor2L2"}] },
-            { "id": "chapel", "name": "Chapel", "joins": [{"linkToId":"mainCorridor2L2"}] },
-            
-            { "id": "mainCorridor1L3", "name": "L3 corridor between ASB and HR/Education Center", "joins": [{"linkToId":"asbFoyerL3"}, {"linkToId":"hrMainCorridorIntersection"}, {"linkToId":"labCare"}] },
-            { "id": "hrMainCorridorIntersection", "name": "Intersection of HR and main corridor", "joins": [{"linkToId":"mainCorridor1L3"}, {"linkToId":"hrLiftsStairs"}, {"linkToId":"humanResources"}, {"linkToId":"educationCenter"}, {"linkToId":"library"}] },
-
-            { "id": "labCare", "name": "LabCare", "joins": [{"linkToId":"mainCorridor1L3"}] },
-            { "id": "hrLiftsStairs", "name": "HR Lifts/Stairs", "joins": [{"linkToId":"hrMainCorridorIntersection"},{"linkToId":"kitchenMainCorridorIntersection"}] },
-
-            { "id": "humanResources", "name": "Human Resources", "joins": [{"linkToId":"hrMainCorridorIntersection"}] },
-            { "id": "library", "name": "Library", "joins": [{"linkToId":"hrMainCorridorIntersection"}] },
-            { "id": "educationCenter", "name": "Education Center", "joins": [{"linkToId":"hrMainCorridorIntersection"}] },
-
-
-            
-            { "id": "mainCorridor1L1", "name": "L1 corridor between ASB and Kitchen", "joins": [{"linkToId":"asbFoyerReception"},{"linkToId":"kitchenMainCorridorIntersection"},{"linkToId":"cafe"}, {"linkToId":"emergencyDepartment"}] },
-            { "id": "cafe", "name": "Cafe", "joins": [{"linkToId":"mainCorridor1L1"}] },
-            { "id": "emergencyDepartment", "name": "EmergencyDepartment", "joins": [{"linkToId":"mainCorridor1L1"}] },
-            { "id": "kitchenMainCorridorIntersection", "name": "Intersection between Kitchen and main corridor", "joins": [{"linkToId":"hrLiftsStairs"},{"linkToId":"mainCorridor1L1"},{"linkToId":"mainCorridor2L1"},{"linkToId":"kitchen"}] },
-            { "id": "kitchen", "name": "Kitchen", "joins": [{"linkToId":"kitchenMainCorridorIntersection"}] },
-            { "id": "mainCorridor2L1", "name": "L1 corridor between Kitchen and Mortuary", "joins": [{"linkToId":"kitchenMainCorridorIntersection"},{"linkToId":"dieticians"},{"linkToId":"stores"},{"linkToId":"mortuary"}] },
-            { "id": "dieticians", "name": "Dieticians", "joins": [{"linkToId":"mainCorridor2L1"}] },
-            { "id": "stores", "name": "Stores", "joins": [{"linkToId":"mainCorridor2L1"}] },
-            { "id": "mortuary", "name": "Mortuary", "joins": [{"linkToId":"mainCorridor2L1"}] }
-
-
-        ]
-</textarea>
+            <textarea id="load-locations-input"></textarea>
             <input type="button" value="load" id="load-locations" />
         </div>
         <div>
@@ -235,9 +191,10 @@
             var existingIndex = GetIndexForId($("#item-id").val())
             var links = [];
             $("#join-container").find(".join-item").each(function () {
+                
                 var link = {
                     "linkToId": $(this).find(".linkToId").val(),
-                    "coordinates": $(this).find(".coordinates").val()
+                    "coordinates": JSON.parse($(this).find(".coordinates").val())
                 }
                 links.push(link);
             });
@@ -329,7 +286,7 @@
                 $("#join-container").html("");
                 for (var i = 0; i < location.joins.length; i++) {
                     // join-container
-                    $("#join-container").append($('<div class="join-item"></div>').append($("<input type='text' class='linkToId' value='" + location.joins[i].linkToId + "' /><input class='coordinates' type='text' value='" + location.joins[i].coordinates + "' />")).append($("<span class='delete-join'>X</span>")));
+                    $("#join-container").append($('<div class="join-item"></div>').append($("<input type='text' class='linkToId' value='" + location.joins[i].linkToId + "' /><input class='coordinates' type='text' value='" + JSON.stringify( location.joins[i].coordinates ) + "' />")).append($("<span class='delete-join'>X</span>")));
                 }
                 $("#item-coordinates-input").val(JSON.stringify(location.coordinates) || "[]");
 
