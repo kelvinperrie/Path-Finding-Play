@@ -63,6 +63,7 @@
                 <input type="hidden" id="item-index" value="" /><br />
                 id: <input id="item-id" value="" /><br />
                 name: <input id="item-name" value="" /><br />
+                show in dropdowns: <input id="item-ddshow" value="" /><br/>
                 joins:<br />
                 <div id="join-container">
 
@@ -207,6 +208,7 @@
                 var newLocation = {
                     id: $("#item-id").val(),
                     name: $("#item-name").val(),
+                    showInDropdowns : $("#item-ddshow").val(),
                     joins: links,
                     coordinates: $("#item-coordinates-input").val()
                 };
@@ -217,6 +219,7 @@
                 console.log(locations[existingIndex]);
                 locations[existingIndex].id = $("#item-id").val();
                 locations[existingIndex].name = $("#item-name").val();
+                locations[existingIndex].showInDropdowns = $("#item-ddshow").val();
                 console.log(locations[existingIndex].joins);
                 console.log(links);
                 locations[existingIndex].joins = links;
@@ -283,6 +286,7 @@
                 $("#item-index").val(index);
                 $("#item-id").val(location.id);
                 $("#item-name").val(location.name);
+                $("#item-ddshow").val(location.showInDropdowns || false);
                 $("#join-container").html("");
                 for (var i = 0; i < location.joins.length; i++) {
                     // join-container

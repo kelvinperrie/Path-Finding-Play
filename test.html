@@ -202,12 +202,14 @@
 
             for (var i = 0; i < nodes.length; i++) {
                 var node = nodes[i];
-                var o = new Option(node.name, node.id);
-                $(o).html(node.name);
-                $("#location-start").append(o);
-                o = new Option(node.name, node.id);
-                $(o).html(node.name);
-                $("#location-target").append(o);
+                if (node.showInDropdowns === "true") { // this is a string value
+                    var o = new Option(node.name, node.id);
+                    $(o).html(node.name);
+                    $("#location-start").append(o);
+                    o = new Option(node.name, node.id);
+                    $(o).html(node.name);
+                    $("#location-target").append(o);
+                }
             }
         }
         InitalizeHtml();
