@@ -2,6 +2,7 @@ var pageinfo = [{
     "id": "mainEntrance",
     "name": "Main Entrance",
     "showInDropdowns": "true",
+    "levels": [1],
     "joins": [{
         "linkToId": "asbFoyerReception",
         "coordinates": {
@@ -26,8 +27,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "asbFoyerReception",
-        "name": "L1 Main Entrance Foyer/Reception",
-        "showInDropdowns": "true",
+    "name": "L1 Main Entrance Foyer/Reception",
+    "showInDropdowns": "true",
+    "levels": [1],
     "joins": [{
         "linkToId": "mainEntrance",
         "coordinates": {
@@ -48,7 +50,7 @@ var pageinfo = [{
         }
     }, {
         "linkToId": "asbStairsLift",
-            "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
+        "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
     }, {
         "linkToId": "clinicalServicesStairsLift",
         "coordinates": {
@@ -85,8 +87,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "theatre",
-        "name": "Theatre",
-        "showInDropdowns": "true",
+    "name": "Theatre",
+    "showInDropdowns": "true",
+    "levels": [1],
     "joins": [{
         "linkToId": "asbFoyerReception",
         "coordinates": {
@@ -114,8 +117,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "pacu2",
-        "name": "Pacu 2",
-        "showInDropdowns": "true",
+    "name": "Pacu 2",
+    "showInDropdowns": "true",
+    "levels": [1],
     "joins": [{
         "linkToId": "asbFoyerReception",
         "coordinates": {
@@ -150,18 +154,19 @@ var pageinfo = [{
 }, {
     "id": "asbStairsLift",
     "name": "ASB Lifts",
+    "levels": [1, 2, 3, 4],
     "joins": [{
         "linkToId": "asbFoyerReception",
         "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
     }, {
         "linkToId": "asbFoyerL2",
-            "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
+        "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
     }, {
         "linkToId": "asbFoyerL3",
-            "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
+        "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
     }, {
         "linkToId": "asbFoyerL4",
-            "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
+        "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
     }
     ],
     "coordinates": [{
@@ -181,6 +186,7 @@ var pageinfo = [{
 }, {
     "id": "clinicalServicesStairsLift",
     "name": "Clinical Services Stairs/Lifts",
+    "levels": [1, 2, 3, 4],
     "joins": [{
         "linkToId": "asbFoyerReception",
         "coordinates": {
@@ -223,8 +229,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "asbFoyerL2",
-        "name": "L2 ASB foyer",
-        "showInDropdowns": "true",
+    "name": "L2 ASB foyer",
+    "showInDropdowns": "true",
+    "levels": [2],
     "joins": [{
         "linkToId": "asbStairsLift",
         "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
@@ -276,8 +283,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "asbFoyerL3",
-        "name": "L3 ASB foyer",
-        "showInDropdowns": "true",
+    "name": "L3 ASB foyer",
+    "levels": [3],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "asbStairsLift",
         "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
@@ -317,8 +325,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "asbFoyerL4",
-        "name": "L4 ASB foyer",
-        "showInDropdowns": "true",
+    "name": "L4 ASB foyer",
+    "levels": [4],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "asbStairsLift",
         "coordinates": { "lat": -39.07082893899728, "lng": 174.05502193353317 }
@@ -352,8 +361,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "w2A",
-        "name": "Ward 2A",
-        "showInDropdowns": "true",
+    "name": "Ward 2A",
+    "levels": [2],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "asbFoyerL2",
         "coordinates": {
@@ -381,8 +391,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "w2B",
-        "name": "Ward 2B",
-        "showInDropdowns": "true",
+    "name": "Ward 2B",
+    "levels": [2],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "asbFoyerL2",
         "coordinates": {
@@ -417,6 +428,7 @@ var pageinfo = [{
 }, {
     "id": "mainCorridor1L2",
     "name": "L2 corridor between ASB and Specialist Services",
+    "levels": [2],
     "joins": [{
         "linkToId": "asbFoyerL2",
         "coordinates": {
@@ -448,6 +460,7 @@ var pageinfo = [{
 }, {
     "id": "specialServicesMainCorridorIntersection",
     "name": "L2 Intersection of Specialist Services and main corridor",
+    "levels": [2],
     "joins": [{
         "linkToId": "mainCorridor1L2",
         "coordinates": {
@@ -500,6 +513,7 @@ var pageinfo = [{
 }, {
     "id": "specialServicesLiftsStairs",
     "name": "Specialist Services Lifts/Stairs",
+    "levels": [1, 2, 3, 4],
     "joins": [{
         "linkToId": "specialServicesMainCorridorIntersection",
         "coordinates": {
@@ -507,17 +521,17 @@ var pageinfo = [{
             "lng": 174.05558922073982
         }
     }, {
-            "linkToId": "hrMainCorridorIntersection",
-            "coordinates": {
-                "lat": -39.071513228967305,
-                "lng": 174.05559726736686
-            }
+        "linkToId": "hrMainCorridorIntersection",
+        "coordinates": {
+            "lat": -39.071513228967305,
+            "lng": 174.05559726736686
+        }
     }, {
-            "linkToId": "kitchenMainCorridorIntersection",
-            "coordinates": {
-                "lat": -39.071513228967305,
-                "lng": 174.05559726736686
-            }
+        "linkToId": "kitchenMainCorridorIntersection",
+        "coordinates": {
+            "lat": -39.071513228967305,
+            "lng": 174.05559726736686
+        }
     }
     ],
     "coordinates": [{
@@ -536,8 +550,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "occupationalTherapy",
-        "name": "Occupational Therapy",
-        "showInDropdowns": "true",
+    "name": "Occupational Therapy",
+    "levels": [2],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "specialServicesMainCorridorIntersection",
         "coordinates": {
@@ -563,6 +578,7 @@ var pageinfo = [{
 }, {
     "id": "mainCorridor2L2",
     "name": "L2 corridor between Specialist Services and Outpatients",
+    "levels": [2],
     "joins": [{
         "linkToId": "specialServicesMainCorridorIntersection",
         "coordinates": {
@@ -599,8 +615,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "orthotics",
-        "name": "Orthotics",
-        "showInDropdowns": "true",
+    "name": "Orthotics",
+    "levels": [2],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "mainCorridor2L2",
         "coordinates": {
@@ -625,8 +642,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "chapel",
-        "name": "Chapel",
-        "showInDropdowns": "true",
+    "name": "Chapel",
+    "levels": [2],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "mainCorridor2L2",
         "coordinates": {
@@ -652,6 +670,7 @@ var pageinfo = [{
 }, {
     "id": "mainCorridor1L3",
     "name": "L3 corridor between ASB and HR/Education Center",
+    "levels": [3],
     "joins": [{
         "linkToId": "asbFoyerL3",
         "coordinates": {
@@ -689,6 +708,7 @@ var pageinfo = [{
 }, {
     "id": "hrMainCorridorIntersection",
     "name": "L3 Intersection of HR and main corridor",
+    "levels": [3],
     "joins": [{
         "linkToId": "mainCorridor1L3",
         "coordinates": {
@@ -746,8 +766,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "labCare",
-        "name": "LabCare",
-        "showInDropdowns": "true",
+    "name": "LabCare",
+    "levels": [3],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "mainCorridor1L3",
         "coordinates": {
@@ -772,8 +793,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "humanResources",
-        "name": "Human Resources",
-        "showInDropdowns": "true",
+    "name": "Human Resources",
+    "levels": [3],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "hrMainCorridorIntersection",
         "coordinates": {
@@ -807,8 +829,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "library",
-        "name": "Library",
-        "showInDropdowns": "true",
+    "name": "Library",
+    "levels": [3],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "hrMainCorridorIntersection",
         "coordinates": {
@@ -833,8 +856,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "educationCenter",
-        "name": "Education Center",
-        "showInDropdowns": "true",
+    "name": "Education Center",
+    "levels": [3],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "hrMainCorridorIntersection",
         "coordinates": {
@@ -860,6 +884,7 @@ var pageinfo = [{
 }, {
     "id": "mainCorridor1L1",
     "name": "L1 corridor between ASB and Kitchen",
+    "levels": [1],
     "joins": [{
         "linkToId": "asbFoyerReception",
         "coordinates": {
@@ -902,8 +927,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "cafe",
-        "name": "Cafe",
-        "showInDropdowns": "true",
+    "name": "Cafe",
+    "levels": [1],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "mainCorridor1L1",
         "coordinates": {
@@ -928,8 +954,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "emergencyDepartment",
-        "name": "EmergencyDepartment",
-        "showInDropdowns": "true",
+    "name": "EmergencyDepartment",
+    "levels": [1],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "mainCorridor1L1",
         "coordinates": {
@@ -955,6 +982,7 @@ var pageinfo = [{
 }, {
     "id": "kitchenMainCorridorIntersection",
     "name": "L1 Intersection between Kitchen and main corridor",
+    "levels": [1],
     "joins": [{
         "linkToId": "specialServicesLiftsStairs",
         "coordinates": {
@@ -974,16 +1002,17 @@ var pageinfo = [{
             "lng": 174.05566700480125
         }
     }, {
-            "linkToId": "kitchen",
-            "coordinates": { "lat": -39.07154527396063, "lng": 174.05557178638122 }
+        "linkToId": "kitchen",
+        "coordinates": { "lat": -39.07154527396063, "lng": 174.05557178638122 }
     }
-        ],
-        "coordinates": [{ "lat": -39.07146291712123, "lng": 174.05559446468135 }, { "lat": -39.07144105232796, "lng": 174.05564274444362 }, { "lat": -39.071516017305264, "lng": 174.05570309414645 }, { "lat": -39.07153788207531, "lng": 174.05564676775714 }, { "lat": -39.071565993912564, "lng": 174.05558910026332 }, { "lat": -39.071531634998856, "lng": 174.05555825485965 }, { "lat": -39.07150248196803, "lng": 174.0556212867715 }
-        ]
+    ],
+    "coordinates": [{ "lat": -39.07146291712123, "lng": 174.05559446468135 }, { "lat": -39.07144105232796, "lng": 174.05564274444362 }, { "lat": -39.071516017305264, "lng": 174.05570309414645 }, { "lat": -39.07153788207531, "lng": 174.05564676775714 }, { "lat": -39.071565993912564, "lng": 174.05558910026332 }, { "lat": -39.071531634998856, "lng": 174.05555825485965 }, { "lat": -39.07150248196803, "lng": 174.0556212867715 }
+    ]
 }, {
     "id": "kitchen",
-        "name": "Kitchen",
-        "showInDropdowns": "true",
+    "name": "Kitchen",
+    "levels": [1],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "kitchenMainCorridorIntersection",
         "coordinates": {
@@ -1009,6 +1038,7 @@ var pageinfo = [{
 }, {
     "id": "mainCorridor2L1",
     "name": "L1 corridor between Kitchen and Mortuary",
+    "levels": [1],
     "joins": [{
         "linkToId": "kitchenMainCorridorIntersection",
         "coordinates": {
@@ -1016,12 +1046,12 @@ var pageinfo = [{
             "lng": 174.05567102811477
         }
     }, {
-            "linkToId": "dieticians",
-            "coordinates": {
-                "lat": -39.071625833138945,
-                "lng": 174.05568262651104
-            }
-        
+        "linkToId": "dieticians",
+        "coordinates": {
+            "lat": -39.071625833138945,
+            "lng": 174.05568262651104
+        }
+
     }, {
         "linkToId": "stores",
         "coordinates": {
@@ -1035,25 +1065,26 @@ var pageinfo = [{
             "lng": 174.0558006437077
         }
     }
-        ],
-        "coordinates": [{
-            "lat": -39.07192928285458,
-            "lng": 174.05581313241677
-        }, {
-            "lat": -39.07191574759661,
-            "lng": 174.05586811770158
-        }, {
-            "lat": -39.071513853369304,
-            "lng": 174.05570047963815
-        }, {
-            "lat": -39.07153675931941,
-            "lng": 174.05564683545785
-        }
-        ]
+    ],
+    "coordinates": [{
+        "lat": -39.07192928285458,
+        "lng": 174.05581313241677
+    }, {
+        "lat": -39.07191574759661,
+        "lng": 174.05586811770158
+    }, {
+        "lat": -39.071513853369304,
+        "lng": 174.05570047963815
+    }, {
+        "lat": -39.07153675931941,
+        "lng": 174.05564683545785
+    }
+    ]
 }, {
     "id": "dieticians",
-        "name": "Dieticians",
-        "showInDropdowns": "true",
+    "name": "Dieticians",
+    "levels": [1],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "mainCorridor2L1",
         "coordinates": {
@@ -1078,8 +1109,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "stores",
-        "name": "Stores",
-        "showInDropdowns": "true",
+    "name": "Stores",
+    "levels": [1],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "mainCorridor2L1",
         "coordinates": {
@@ -1104,8 +1136,9 @@ var pageinfo = [{
     ]
 }, {
     "id": "mortuary",
-        "name": "Mortuary",
-        "showInDropdowns": "true",
+    "name": "Mortuary",
+    "levels": [1],
+    "showInDropdowns": "true",
     "joins": [{
         "linkToId": "mainCorridor2L1",
         "coordinates": {
@@ -1129,4 +1162,4 @@ var pageinfo = [{
     }
     ]
 }
-]
+];

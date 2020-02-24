@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Drawing tools</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #location-display{
+            position: absolute;
+            top: 100px;
+            z-index: 100;
+            background-color: #fff;
+            margin: 3px;
+            padding: 5px;
+        }
+        #locations-list {
+            display: inline-block;
+            vertical-align: top;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            height: 500px;
+        }
+        .location-item {
+            width: 200px;
+        }
+        .location-item:nth-child(even) {background: #e0e0e0}
+        #selected-location-item {
+            width: 200px;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .level-set{
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background-color: #fff;
+        }
+        #new-join-instructions {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div class="level-set">
+        <div class="level-setter" data-level="0">B</div>
+        <div class="level-setter" data-level="1">L1</div>
+        <div class="level-setter" data-level="2">L2</div>
+        <div class="level-setter" data-level="3">L3</div>
+        <div class="level-setter" data-level="4">L4</div>
+    </div>
+    <div id="location-display">
+        <div>
+            <textarea id="load-locations-input"></textarea>
+            <input type="button" value="load to js model" id="load-locations" /><br/>
+            <input type="button" value="output js model" id="locations-to-input" />
+        </div>
+        <div>
+            <div id="locations-list">
+
+            </div>
+            <div id="selected-location-item">
+                <input type="button" id="new-location" value="make a new one" /><br />
+                <input type="hidden" id="item-index" value="" /><br />
+                id: <input id="item-id" value="" /><br />
+                name: <input id="item-name" value="" /><br />
+                levels: <input id="item-levels" value="" /><br />
+                show in dropdowns: <input id="item-ddshow" value="" /><br />
+                joins:<br />
+                <div id="join-container">
+
+                </div>
+                <input type="button" id="new-join" value="new join" />
+                <div id="new-join-instructions">click item on the menu</div>
+                <div id="item-coordinates">
+                    coordinates:<br />
+                    <textarea id="item-coordinates-input"></textarea>
+                </div>
+
+                <input type="button" id="save-selected-item" value="save this guy" />
+            </div>
+        </div>
+    </div>
+    <script src="jquery-3.4.1.min.js"></script>
+    <script src="paths.js"></script>
+    <script src="pageinfoV2.js"></script>
+    <script>
+        var page;
+        function CreateModel() {
+            page = new pageModel(pageinfo);
+        }
+
+        $(document).ready(function () {
+            $(".level-setter").on("click", function () {
+                console.log("clicked on a level changer");
+                var level = $(this).data("level");
+                page.SetCurrentLevel(level);
+            });
+
+            $("#locations-to-input").on("click", function () {
+                page.editor.SetBackLocationsToInput();
+            });
+            $("#load-locations").on("click", function () {
+                alert("not linked to anything yet");
+            });
+            $("#new-join").on("click", function () {
+                page.editor.NewJoinRequested();
+            });
+        });
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzfpFt6f4Tz9MUjQed0SoIVfbDaUHfavE&libraries=drawing&callback=CreateModel" async defer></script>
+</body>
+
+</html>
