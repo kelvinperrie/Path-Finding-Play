@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Drawing tools</title>
+    <title>Path Finding Model Editor</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <style>
@@ -13,14 +13,16 @@
             height: 100%;
         }
         /* Optional: Makes the sample page fill the window. */
-        
+
         html,
         body {
             height: 100%;
             margin: 0;
             padding: 0;
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
         }
-        #location-display{
+
+        #location-display {
             position: absolute;
             top: 100px;
             z-index: 100;
@@ -48,6 +50,11 @@
             position: absolute;
             right: 0;
             top: 50px;
+        }
+        .level-setter {
+            padding: 10px;
+            margin: 2px;
+            cursor: pointer;
             background-color: #fff;
         }
         #new-join-instructions {
@@ -59,26 +66,27 @@
 <body>
     <div id="map"></div>
     <div class="level-set">
-        <div class="level-setter" data-level="0">B</div>
-        <div class="level-setter" data-level="1">L1</div>
-        <div class="level-setter" data-level="2">L2</div>
-        <div class="level-setter" data-level="3">L3</div>
-        <div class="level-setter" data-level="4">L4</div>
+        <div class="level-setter" title="show level B data" data-level="0">B</div>
+        <div class="level-setter" title="show level 1 data" data-level="1">L1</div>
+        <div class="level-setter" title="show level 2 data" data-level="2">L2</div>
+        <div class="level-setter" title="show level 3 data" data-level="3">L3</div>
+        <div class="level-setter" title="show level 4 data" data-level="4">L4</div>
     </div>
     <div id="location-display">
         <div>
-            <textarea id="load-locations-input"></textarea>
+            <textarea id="load-locations-input"></textarea><br/>
             <input type="button" value="load to js model" id="load-locations" /><br/>
             <input type="button" value="output js model" id="locations-to-input" />
         </div>
         <div>
+            Locations: <br/>
             <div id="locations-list">
 
             </div>
             <div id="selected-location-item">
                 <input type="button" id="new-location" value="make a new one" /><br />
                 <input type="hidden" id="item-index" value="" /><br />
-                id: <input id="item-id" value="" /><br />
+                id: <br/><input id="item-id" value="" /><br />
                 name: <input id="item-name" value="" /><br />
                 levels: <input id="item-levels" value="" /><br />
                 show in dropdowns: <input id="item-ddshow" value="" /><br />
@@ -98,8 +106,8 @@
         </div>
     </div>
     <script src="jquery-3.4.1.min.js"></script>
-    <script src="paths.js"></script>
-    <script src="pageinfoV2.js"></script>
+    <script src="scripts/model-editor.js"></script>
+    <script src="scripts/persistance.js"></script>
     <script>
         var page;
         function CreateModel() {
@@ -121,6 +129,9 @@
             });
             $("#new-join").on("click", function () {
                 page.editor.NewJoinRequested();
+            });
+            $("#new-location").on("click", function () {
+                page.editor.ClearCurrentItem();
             });
         });
 

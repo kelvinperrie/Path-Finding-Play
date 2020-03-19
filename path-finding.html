@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-nz">
+<head>
+    <title>TDHB Hospital Path Finding PoC</title>
+    <style>
+        .lead-text {
+            font-size: 1.5em;
+            margin-bottom: .5em;
+        }
+        #path-output {
+            display: none;
+            margin-top: 1em;
+        }
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        #display-path li {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-4">
+                <div class="lead-text">Where are you trying to go?</div>
+                <div class="form-group">
+                    from:
+                    <select id="location-start">
+                    </select>
+                </div>
+                <div class="form-group">
+                    to:
+                    <select id="location-target">
+                    </select>
+                </div>
+                <div>
+                    <input type="button" id="calculate" value="find my path" />
+                </div>
+                <div id="path-output">
+                    The path you need to follow is:
+                    <ul id="display-path">
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-8">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzfpFt6f4Tz9MUjQed0SoIVfbDaUHfavE"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script src="scripts/persistance.js"></script>
+    <script src="scripts/path-finder.js"></script>
+    <script src="scripts/path-display.js"></script>
+    <script>
+
+        var pathDisplayer;  // object that displays paths on map
+        var pathFinder;     // object to calculate paths
+
+        function initPage() {
+
+            var map = initMap(map);
+            pathDisplayer = new PathDisplayer(map);
+
+            var nodes = pageinfo.locations;
+            var joins = pageinfo.joins;
+            pathFinder = new PathFinder(nodes, joins);
+
+            var locations = GetListOfVisitableLocations(nodes)
+            InitalizeHtml(locations);
+        }
+
+
+        // sets up the map
+        function initMap() {
+            var uluru = {
+                lat: -39.07131309060466,
+                lng: 174.05516006729744
+            };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: uluru,
+                mapTypeId: 'satellite',
+                zoom: 18,
+                styles: [{
+                    featureType: 'poi',
+                    stylers: [{
+                        visibility: 'off'
+                    }]
+                }, {
+                    featureType: 'transit',
+                    elementType: 'labels.icon',
+                    stylers: [{
+                        visibility: 'off'
+                    }]
+                }]
+            });
+            return map;
+        }
+        google.maps.event.addDomListener(window, 'load', initPage);
+
+        function GetListOfVisitableLocations(nodes) {
+            // get a list of all the locations we want the user to be able to see
+            var locations = [];
+            for (var i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
+                if (node.showInDropdowns === "true") { // this is a string value
+                    locations.push({
+                        name: node.name,
+                        id: node.id
+                    })
+                }
+            }
+
+            // sort the list
+            locations.sort(function (a, b) {
+                if (a.name.toUpperCase() < b.name.toUpperCase()) {
+                    return -1;
+                } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+
+            return locations;
+        }
+
+        // setup the dropdowns etc
+        function InitalizeHtml(locations) {
+
+            // populate the dropdowns on the page
+            for (var i = 0; i < locations.length; i++) {
+                var selected = (locations[i].id === "mainEntrance");
+                var o = new Option(locations[i].name, locations[i].id, null, selected);
+                $(o).html(locations[i].name);
+                $("#location-start").append(o);
+                o = new Option(locations[i].name, locations[i].id);
+                $(o).html(locations[i].name);
+                $("#location-target").append(o);
+            }
+        }
+
+
+        $("#calculate").on("click", function () {
+            pathDisplayer.ClearExistingData();
+
+            var startId = $("#location-start").val();
+            var targetId = $("#location-target").val();
+            var thePath = pathFinder.CalculatePath(startId, targetId);
+
+            pathDisplayer.DisplayPath(thePath);
+        });
+
+    </script>
+</body>
+</html>

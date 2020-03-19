@@ -180,12 +180,34 @@ var pageModel = function (locationsData) {
         drawingManager.setMap(map);
 
         google.maps.event.addListener(drawingManager, 'overlaycomplete', function (event) {
-            if (event.type == 'marker') {
+            if (event.type === 'marker') {
                 var lat = event.overlay.getPosition().lat();
                 var lng = event.overlay.getPosition().lng();
                 var coord = '{"lat": ' + lat + ', "lng": ' + lng + '}';
                 console.log(coord);
                 self.MarkerWasAddedCallback(coord);
+            }
+            if (event.type === 'polygon') {
+
+                console.log("polygon was just drawn");
+
+                self.editor.PolygonCompletedCallback(event.overlay, false);
+
+                // add event listeners for polygon maipulation
+                var newShape = event.overlay;
+
+                google.maps.event.addListener(newShape.getPath(), 'set_at', function () {
+                    self.editor.PolygonCompletedCallback(event.overlay, true);
+                });
+
+                google.maps.event.addListener(newShape.getPath(), 'insert_at', function () {
+                    self.editor.PolygonCompletedCallback(event.overlay, true);
+                });
+
+                google.maps.event.addListener(newShape, 'click', function (event) {
+                    console.log("this is the click event for the new drawing");
+                    self.LocationClicked(self.selectedLocation);
+                }); 
             }
         });
 
@@ -244,7 +266,8 @@ var editor = function (pageModel) {
             );
         }
         $(".location-item").on("click", function () {
-            LocationItemClicked($(this));
+            // todo
+            //LocationItemClicked($(this));
         });
     };
     self.ClearLocationsList = function () {
@@ -324,6 +347,8 @@ var editor = function (pageModel) {
                 level: self.pageModel.currentLevel
             };
             links.push(link);
+            console.log("found link");
+            console.log(link);
         });
 
         // if any joins for this id that exist that aren't in the above 'links' collection then they need to be deleted
@@ -349,10 +374,17 @@ var editor = function (pageModel) {
             }
         }
 
-        // if any joins exist that match ids in the above collection the copy over the coordinates
+        // if any joins exist that match ids in the above collection then copy over the coordinates
         for (i = 0; i < self.pageModel.joins.length; i++) {
+            console.log(" - checking join to see if it needs co-ords updated; for locations:");
+            console.log(self.pageModel.joins[i].locations);
+
             for (x = 0; x < links.length; x++) {
-                if (links[x].locations.includes(thisId) && links[x].locations.includes(otherValue)) {
+                var left = links[x][0];
+                var right = links[x][1];
+                if (links[x].locations.includes(left) && links[x].locations.includes(right)) {
+                    console.log("overwriting co-ordinates for " + left + " and " + right);
+                    console.log(links[x].locations);
                     self.pageModel.joins[i].coordinates = links[x].coordinates;
                 }
             }
@@ -362,7 +394,7 @@ var editor = function (pageModel) {
         for (x = 0; x < links.length; x++) {
             found = false;
             for (i = 0; i < self.pageModel.joins.length; i++) {
-                if (self.pageModel.joins[i].locations.includes(thisId) && self.pageModel.joins[i].locations.includes(links[x].locations[1])) {
+                if (self.pageModel.joins[i].locations.includes(links[x].locations[0]) && self.pageModel.joins[i].locations.includes(links[x].locations[1])) {
                     found = true;
                     break;
                 }
@@ -402,7 +434,7 @@ var editor = function (pageModel) {
             self.pageModel.locations.push(updatedLocation);
         }
 
-        //self.SetBackLocationsToInput();
+        self.SetBackLocationsToInput();
     };
 
     self.SetBackLocationsToInput = function () {

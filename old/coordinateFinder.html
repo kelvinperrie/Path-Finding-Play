@@ -125,6 +125,8 @@
                 delete locations[i].polygonDefinition;
             }
             var locationJson = JSON.stringify(cloneLocations);
+            console.log("updating textarea with");
+            console.log(locationJson);
             $("#load-locations-input").val(locationJson);
         }
 
