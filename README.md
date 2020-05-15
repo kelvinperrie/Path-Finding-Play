@@ -1,6 +1,8 @@
 # Path-Finding-Play
 Proof of concept for path finding through the hospital; displays on google maps
 
+demo: https://raw.githack.com/kelvinperrie/Path-Finding-Play/master/path-finding.html
+
 Finding a path to somwhere:
 ![Example 1](examples/PathFinding-Example1.gif?raw=true "example 1")
 
