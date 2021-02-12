@@ -2,6 +2,7 @@
 Proof of concept for path finding through the hospital; displays on google maps
 
 demo: https://raw.githack.com/kelvinperrie/Path-Finding-Play/master/path-finding.html
+
 note: the demo for this is now kind of hosed because google changed the way apis need to be accessed
 
 Finding a path to somwhere:
